@@ -46,6 +46,7 @@ int main(int argc, char *argv[])
 		for (j = 0; j < N; j++)
 		{
 			sum = sum + a_buffer[j] * b[j][i];
+			
 		}
 
 		c_buffer[i] = sum;
