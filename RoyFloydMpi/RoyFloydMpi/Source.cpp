@@ -1,6 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
-#include <string.h> /* for debugging */
+#include <string.h> 
 #include <mpi.h>
 
 const int INFINITY = 1000000;
@@ -48,12 +48,10 @@ int main(int argc, char* argv[]) {
 
 	return 0;
 }
-/*
-* Purpose:   Read in the local_matrix on process 0 and scatter it using a
-*            block row distribution among the processes.*/
 
-void Read_matrix(int local_mat[], int n, int my_rank, int p,
-	MPI_Comm comm) {
+
+void Read_matrix(int local_mat[], int n, int my_rank, int p,                                                                    /*Read in the local_matrix on process 0 and scatter it using a block row distribution among the processes.*/
+	MPI_Comm comm) {  
 	int i, j;
 	int* temp_mat = NULL;
 
@@ -73,12 +71,7 @@ void Read_matrix(int local_mat[], int n, int my_rank, int p,
 
 }
 
-/* Purpose:   Convert a row of the matrix to a string and then print
-the string.  Primarily for debugging:  the single string
-is less likely to be corrupted when multiple processes
-are attempting to print.*/
-
-void Print_row(int local_mat[], int n, int my_rank, int i) {
+void Print_row(int local_mat[], int n, int my_rank, int i) {                                                               /*Convert a row of the matrix to a string and then print the string.*/
 	char char_int[100];
 	char char_row[1000];
 	int j, offset = 0;
@@ -94,7 +87,7 @@ void Print_row(int local_mat[], int n, int my_rank, int i) {
 	printf("Proc %d > row %d = %s\n", my_rank, i, char_row);
 }
 
-//Purpose:   Gather the distributed matrix onto process 0 and print it.
+//   Gather the distributed matrix into process 0 and print it.
 
 void Print_matrix(int local_mat[], int n, int my_rank, int p,
 	MPI_Comm comm) {
@@ -139,18 +132,17 @@ void Floyd(int local_mat[], int n, int my_rank, int p, MPI_Comm comm) {
 			}
 	}
 	free(row_k);
-}  /* Floyd */
+}  
 
 
-   // Purpose:   Return rank of process that owns global row k
 
-int Owner(int k, int p, int n) {
+int Owner(int k, int p, int n) { //:   Return rank of process that owns global row k
 	return k / (n / p);
-}  /* Owner */
+} 
 
-   //   Copy the row with *global* subscript k into row_k
+  
+void Copy_row(int local_mat[], int n, int p, int row_k[], int k) {                                                          //   Copy the row with *global* subscript k into row_k
 
-void Copy_row(int local_mat[], int n, int p, int row_k[], int k) {
 	int j;
 	int local_k = k % (n / p);
 

@@ -1,60 +1,58 @@
-#include <mpi.h>
+#include "mpi.h"
 #include <stdio.h>
 #include <stdlib.h>
+#include <iostream>
+#include<time.h>
+#define SIZE 100
+
+using namespace std;
 
 int main(int argc, char **argv) {
-	int size, rank;
+	int rank, size, segmentSize, startPos, endPos, index;
+	int arr[SIZE];
+	int KEY = 20;
+	int maxPosition = 0;
+	int max = 0;
 
+	srand(time(NULL) + 1);
+
+	for (index = 0; index < SIZE; index++) {
+		arr[i] = rand() % 100;
+	}
+	srand(time(NULL) + 1);
+
+	MPI_Status status;
+	char hostname[MPI_MAX_PROCESSOR_NAME];
 	MPI_Init(&argc, &argv);
 	MPI_Comm_size(MPI_COMM_WORLD, &size);
 	MPI_Comm_rank(MPI_COMM_WORLD, &rank);
 
-	/*int *globaldata = NULL;
-	int localdata;*/
-	int n = 10, i = 0, x = 5, gasit = 0;
-	int a[100] = { 1,6,0,5,8,4,5,5,2 };
+	segmentSize = SIZE / size;
+	if (SIZE % size != 0)
+		++segmentSize;
 
-	
-	while ((i < n) && (gasit == 0))
-		
-		if (a[i] == x) {
-			
-				gasit = 1;
-				
-			}
-		
-		else
-			i++;
-	       
-	
-		if (gasit >= 1)
-		{
-			
-			printf("Numarul %d se afla in vector pe pozitia a  %d  \n",x, i + 1);
-			
+	startPos = rank * segmentSize;
+	endPos = startPos + segmentSize - 1;
+
+	startPos = rank * segmentSize;
+	endPos = startPos + segmentSize - 1;
+
+	MPI_Bcast(arr, 10, MPI_INT, 0, MPI_COMM_WORLD);
+	for (index = startPos; index <= endPos; index++) {
+		printf("%d ", arr[i]);
+		if (arr[i] == KEY) {
+			max = index;
 		}
-
-		else {
-			printf("Not found");
-		}
-	
-
-
-	MPI_Scatter(a, 1, MPI_INT, &x, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	MPI_Gather(&x, 1, MPI_INT, a, 1, MPI_INT, 0, MPI_COMM_WORLD);
-
-	if (rank == 0) {
-		printf("Processor %d has data: ", rank);
-		for (int i = 0; i<size; i++)
-			printf("%d ", a[i]);
-		printf("\n");
 	}
 
 
-
+	MPI_Reduce(&max, &maxPosition, 1, MPI_INT, MPI_MAX, 0, MPI_COMM_WORLD);
+	if (rank == 0)
+	{
+		printf("%d max position: ", maxPosition);
+	}
 
 	MPI_Finalize();
+
 	return 0;
 }
-
